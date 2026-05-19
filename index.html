@@ -62,6 +62,10 @@ select{min-width:88px}
 .btn-t:hover{background:var(--t100)}
 .btn-p{border-color:var(--p200);background:var(--p50);color:var(--p800)}
 .btn-p:hover{background:var(--p200)}
+.btn-r{border-color:var(--r200);background:var(--r50);color:var(--r800)}
+.btn-r:hover{background:var(--r200)}
+.btn-b{border-color:var(--b200);background:var(--b50);color:var(--b800)}
+.btn-b:hover{background:var(--b200)}
 .btn-sm{padding:4px 9px;font-size:12px;border-radius:7px}
 .btn-del{padding:4px 7px;border-radius:7px;border:0.5px solid var(--bd);background:transparent;color:var(--txt3);cursor:pointer;font-family:inherit;font-size:12px;display:inline-flex;align-items:center;transition:all .1s}
 .btn-del:hover{background:var(--r50);color:var(--r800);border-color:var(--r200)}
@@ -104,20 +108,47 @@ tr:hover td{background:var(--surf2)}
 .info-box{background:var(--t50);border:0.5px solid var(--t100);border-radius:var(--r);padding:10px 14px;font-size:12px;color:var(--t800);margin-bottom:14px;line-height:1.7}
 .modal-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center}
 .modal-wrap.show{display:flex}
-.modal{background:var(--surf);border-radius:16px;padding:22px;width:460px;max-width:93vw;border:0.5px solid var(--bd2);max-height:90vh;overflow-y:auto}
+.modal{background:var(--surf);border-radius:16px;padding:22px;width:480px;max-width:93vw;border:0.5px solid var(--bd2);max-height:90vh;overflow-y:auto}
 .modal-title{font-size:15px;font-weight:700;margin-bottom:14px}
 .empty{text-align:center;padding:22px;font-size:13px;color:var(--txt3)}
 .sav-item{background:var(--surf);border:0.5px solid var(--bd);border-radius:var(--rl);padding:16px 18px;margin-bottom:12px}
 .pre-item{background:var(--surf);border:0.5px solid var(--bd);border-radius:var(--rl);padding:16px 18px;margin-bottom:12px}
 .setting-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--bd);flex-wrap:wrap}
 .setting-row:last-child{border-bottom:none}
+
+/* Date picker */
+.date-picker-wrap{position:relative;display:inline-block}
+.date-picker-wrap input{width:120px;cursor:pointer}
+.cal-pop{position:absolute;top:calc(100% + 4px);left:0;background:var(--surf);border:0.5px solid var(--bd2);border-radius:var(--rl);padding:12px;z-index:300;min-width:240px;box-shadow:0 8px 24px rgba(0,0,0,0.12)}
+.cal-pop.right{left:auto;right:0}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-month{font-size:13px;font-weight:700}
+.cal-nav{width:26px;height:26px;border-radius:50%;border:0.5px solid var(--bd2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--txt2)}
+.cal-nav:hover{background:var(--surf2)}
+.cal-nav svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-dow{text-align:center;font-size:10px;font-weight:700;color:var(--txt3);padding:3px 0}
+.cal-day{text-align:center;font-size:12px;padding:5px 2px;border-radius:6px;cursor:pointer;border:none;background:transparent;color:var(--txt);font-family:inherit}
+.cal-day:hover{background:var(--surf2)}
+.cal-day.today{font-weight:700;color:var(--t400)}
+.cal-day.sel{background:var(--t400);color:#fff;font-weight:700}
+.cal-day.empty{pointer-events:none}
+.cal-day.other-month{color:var(--txt3);opacity:.5}
+
+/* Installment edit inline */
+.inst-edit-cell input{width:72px;font-size:12px;padding:4px 6px}
+
+/* Fund item types */
+.fund-section{margin-bottom:18px}
+.fund-section-title{font-size:11px;font-weight:700;color:var(--txt3);letter-spacing:.4px;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:0.5px solid var(--bd)}
+
 @media(max-width:640px){
   .sidebar{width:100%;height:auto;position:relative;padding:8px 0 2px;border-right:none;border-bottom:0.5px solid var(--bd2);flex-direction:row;overflow-x:auto}
   .layout{flex-direction:column}
-  .main{margin-left:0;padding:14px 12px;max-width:100%}
   .logo,.nav-sec{display:none}
   .ni{flex-direction:column;gap:2px;padding:7px 9px;margin:0 2px;font-size:10px;min-width:52px;border-radius:var(--r)}
   .ni svg{width:20px;height:20px}
+  .main{margin-left:0;padding:14px 12px;max-width:100%}
 }
 </style>
 </head>
@@ -138,24 +169,12 @@ tr:hover td{background:var(--surf2)}
   </button>
   <button class="ni" onclick="sw('daily',this)">
     <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-    <span>每日消費</span>
-  </button>
-  <button class="ni" onclick="sw('card',this)">
-    <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-    <span>刷卡 / 付款</span>
+    <span>每日 &amp; 刷卡</span>
   </button>
   <div class="nav-sec">管理</div>
-  <button class="ni" onclick="sw('installment',this)">
-    <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
-    <span>分期總覽</span>
-  </button>
-  <button class="ni" onclick="sw('presave',this)">
-    <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-    <span>預存本</span>
-  </button>
-  <button class="ni" onclick="sw('savings',this)">
+  <button class="ni" onclick="sw('funds',this)">
     <svg viewBox="0 0 24 24"><ellipse cx="12" cy="8" rx="10" ry="4"/><path d="M2 8v8c0 2.21 4.48 4 10 4s10-1.79 10-4V8"/><path d="M2 12c0 2.21 4.48 4 10 4s10-1.79 10-4"/></svg>
-    <span>存錢本</span>
+    <span>存款 &amp; 借貸</span>
   </button>
   <button class="ni" onclick="sw('settings',this)">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
@@ -176,6 +195,7 @@ tr:hover td{background:var(--surf2)}
   <div class="stabs">
     <button class="stab on" onclick="showSub('sub-budget',this)">預算總覽</button>
     <button class="stab" onclick="showSub('sub-payment',this)">本月應繳</button>
+    <button class="stab" onclick="showSub('sub-installments',this)">分期總覽</button>
   </div>
   <div id="sub-budget">
     <div class="mg" id="bud-metrics"></div>
@@ -220,137 +240,174 @@ tr:hover td{background:var(--surf2)}
       <div id="pay-daily-list"><div class="empty">本月尚無消費記錄</div></div>
     </div>
   </div>
-</div>
-
-<!-- 每日消費 -->
-<div class="pg" id="pg-daily">
-  <div class="ph"><div class="pt">每日消費</div><div class="ps">記錄每筆支出，即時更新剩餘預算</div></div>
-  <div class="card">
-    <div class="ct"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增消費</div>
-    <div class="fr">
-      <label>日期</label><input type="text" id="dd-date" placeholder="2026/05/19" style="width:115px">
-      <label>類別</label><select id="dd-cat"></select>
+  <!-- 分期總覽 (sub-tab) -->
+  <div id="sub-installments" style="display:none">
+    <div class="mg" id="inst-metrics-ov"></div>
+    <div class="card">
+      <div class="ct"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>有息分期</div>
+      <div id="inst-int-ov"><div class="empty">目前無有息分期</div></div>
     </div>
-    <div class="fr">
-      <label>說明</label><input type="text" id="dd-note" placeholder="午餐、加油…" style="flex:1;min-width:100px">
-      <label style="min-width:28px">金額</label><input type="number" id="dd-amt" placeholder="150">
-      <button class="btn btn-t" onclick="addDaily()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增</button>
-    </div>
-  </div>
-  <div class="mg" id="daily-metrics"></div>
-  <div class="card">
-    <div class="ct"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>消費明細</div>
-    <div id="daily-empty" class="empty">尚未記錄消費</div>
-    <div class="tw"><table><thead><tr>
-      <th style="width:105px">日期</th><th style="width:64px">類別</th>
-      <th>說明</th><th style="width:78px;text-align:right">金額</th><th style="width:34px"></th>
-    </tr></thead><tbody id="daily-tbody"></tbody></table></div>
-  </div>
-  <div class="card">
-    <div class="ct"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>本月各類別</div>
-    <div id="cat-bkd"><div class="empty" style="padding:14px">本月尚無消費</div></div>
-  </div>
-</div>
-
-<!-- 刷卡 / 付款 -->
-<div class="pg" id="pg-card">
-  <div class="ph"><div class="pt">刷卡 / 付款紀錄</div><div class="ps">信用卡、現金、金融卡皆可記錄；自動推算帳單月份；分期自動加入分期總覽</div></div>
-  <div class="card">
-    <div class="ct"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增紀錄</div>
-    <div class="fr">
-      <label>日期</label><input type="text" id="cd-date" placeholder="2026/05/19" style="width:115px">
-      <label>付款方式</label><select id="cd-paytype" onchange="toggleBankField()"></select>
-    </div>
-    <div class="fr" id="cd-bank-row">
-      <label>銀行</label>
-      <select id="cd-bank"></select>
-      <label style="min-width:28px">類別</label>
-      <select id="cd-cardcat"></select>
-    </div>
-    <div class="fr" id="cd-cash-row" style="display:none">
-      <label>類別</label><select id="cd-cashcat"></select>
-    </div>
-    <div class="fr">
-      <label>品項</label><input type="text" id="cd-item" placeholder="消費品項" style="flex:1;min-width:100px">
-      <label style="min-width:28px">總額</label>
-      <input type="number" id="cd-amt" placeholder="3000" oninput="updPrev()">
-    </div>
-    <div class="fr" id="cd-inst-row">
-      <label>分期</label>
-      <select id="cd-itype" onchange="toggleIF()">
-        <option value="0">不分期（一次付清）</option>
-        <option value="no">無息分期</option>
-        <option value="yes">有息分期</option>
-      </select>
-    </div>
-    <div id="i-fields" style="display:none">
-      <div class="fr">
-        <label>期數</label>
-        <input type="number" id="cd-periods" value="3" min="2" max="60" style="width:70px" oninput="updPrev()">
-        <div id="i-rate-w" style="display:none;align-items:center;gap:8px">
-          <label>年利率%</label>
-          <input type="number" id="cd-rate" value="0" step="0.01" style="width:78px" oninput="updPrev()">
-        </div>
+    <div class="card">
+      <div class="ct"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>全部分期</div>
+      <div class="tw"><table><thead><tr>
+        <th>品項</th><th style="width:60px">銀行</th><th style="width:110px">期數（可編輯）</th>
+        <th style="width:78px;text-align:right">月繳</th><th style="width:78px;text-align:right">未還</th><th style="width:34px"></th>
+      </tr></thead><tbody id="inst-tbody-ov"></tbody></table></div>
+      <div class="sumbox">
+        <span style="color:var(--txt2);font-size:13px">每月固定分期合計</span>
+        <span id="inst-total-ov" style="font-size:16px;font-weight:800">$0</span>
       </div>
     </div>
-    <div style="display:flex;gap:10px;align-items:center;margin-top:4px">
-      <button class="btn btn-t" onclick="addCard()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增</button>
-      <span id="i-prev" style="font-size:12px;color:var(--txt3)"></span>
+  </div>
+</div>
+
+<!-- 每日 & 刷卡 (合併) -->
+<div class="pg" id="pg-daily">
+  <div class="ph"><div class="pt">每日 &amp; 刷卡</div><div class="ps">記錄每筆現金支出與刷卡消費，即時更新剩餘預算</div></div>
+  <div class="ym-nav">
+    <button class="ym-b" onclick="changeYM(-1)"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div class="ym-d" id="ym-disp2"></div>
+    <button class="ym-b" onclick="changeYM(1)"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+  </div>
+  <div class="stabs">
+    <button class="stab on" onclick="showDailySub('dsub-daily',this)">每日消費</button>
+    <button class="stab" onclick="showDailySub('dsub-card',this)">刷卡 / 付款</button>
+  </div>
+
+  <!-- 每日消費 sub -->
+  <div id="dsub-daily">
+    <div class="card">
+      <div class="ct"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增消費</div>
+      <div class="fr">
+        <label>日期</label>
+        <div class="date-picker-wrap">
+          <input type="text" id="dd-date" placeholder="點選選擇日期" readonly style="width:130px;cursor:pointer" onclick="openCal('dd-date','dd-cal')">
+          <div class="cal-pop" id="dd-cal" style="display:none"></div>
+        </div>
+        <label>類別</label><select id="dd-cat"></select>
+      </div>
+      <div class="fr">
+        <label>說明</label><input type="text" id="dd-note" placeholder="午餐、加油…" style="flex:1;min-width:100px">
+        <label style="min-width:28px">金額</label><input type="number" id="dd-amt" placeholder="150">
+        <button class="btn btn-t" onclick="addDaily()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增</button>
+      </div>
     </div>
-    <div id="bank-cutoffs" style="font-size:11px;color:var(--txt3);margin-top:8px;line-height:2"></div>
+    <div class="mg" id="daily-metrics"></div>
+    <div class="card">
+      <div class="ct"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>消費明細</div>
+      <div id="daily-empty" class="empty">尚未記錄消費</div>
+      <div class="tw"><table><thead><tr>
+        <th style="width:105px">日期</th><th style="width:64px">類別</th>
+        <th>說明</th><th style="width:78px;text-align:right">金額</th><th style="width:34px"></th>
+      </tr></thead><tbody id="daily-tbody"></tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="ct"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>本月各類別</div>
+      <div id="cat-bkd"><div class="empty" style="padding:14px">本月尚無消費</div></div>
+    </div>
   </div>
-  <div class="card">
-    <div class="ct"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>各月應繳試算</div>
-    <div id="cbm"><div class="empty">新增信用卡消費後顯示各月應繳與剩餘預算</div></div>
-  </div>
-  <div class="card">
-    <div class="ct"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>消費明細</div>
-    <div id="card-empty" class="empty">尚未記錄</div>
-    <div class="tw"><table><thead><tr>
-      <th style="width:100px">日期</th><th style="width:60px">方式</th><th style="width:54px">銀行</th>
-      <th>品項</th><th style="width:56px">類別</th><th style="width:78px;text-align:right">金額</th>
-      <th style="width:62px;text-align:right">帳單月</th><th style="width:50px;text-align:right">分期</th>
-      <th style="width:34px"></th>
-    </tr></thead><tbody id="card-tbody"></tbody></table></div>
-  </div>
-</div>
 
-<!-- 分期總覽 -->
-<div class="pg" id="pg-installment">
-  <div class="ph"><div class="pt">分期總覽</div><div class="ps">到「應繳」頁勾選繳費，期數自動更新</div></div>
-  <div class="mg" id="inst-metrics"></div>
-  <div class="card">
-    <div class="ct"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>有息分期</div>
-    <div id="inst-int"><div class="empty">目前無有息分期</div></div>
-  </div>
-  <div class="card">
-    <div class="ct"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>全部分期</div>
-    <div class="tw"><table><thead><tr>
-      <th>品項</th><th style="width:52px">銀行</th><th style="width:88px">期數</th>
-      <th style="width:78px;text-align:right">月繳</th><th style="width:78px;text-align:right">未還</th><th style="width:34px"></th>
-    </tr></thead><tbody id="inst-tbody"></tbody></table></div>
-    <div class="sumbox">
-      <span style="color:var(--txt2);font-size:13px">每月固定分期合計</span>
-      <span id="inst-total" style="font-size:16px;font-weight:800">$0</span>
+  <!-- 刷卡 sub -->
+  <div id="dsub-card" style="display:none">
+    <div class="card">
+      <div class="ct"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增紀錄</div>
+      <div class="fr">
+        <label>日期</label>
+        <div class="date-picker-wrap">
+          <input type="text" id="cd-date" placeholder="點選選擇日期" readonly style="width:130px;cursor:pointer" onclick="openCal('cd-date','cd-cal')">
+          <div class="cal-pop" id="cd-cal" style="display:none"></div>
+        </div>
+        <label>付款方式</label><select id="cd-paytype" onchange="toggleBankField()"></select>
+      </div>
+      <div class="fr" id="cd-bank-row">
+        <label>銀行</label>
+        <select id="cd-bank"></select>
+        <label style="min-width:28px">類別</label>
+        <select id="cd-cardcat"></select>
+      </div>
+      <div class="fr" id="cd-cash-row" style="display:none">
+        <label>類別</label><select id="cd-cashcat"></select>
+      </div>
+      <div class="fr">
+        <label>品項</label><input type="text" id="cd-item" placeholder="消費品項" style="flex:1;min-width:100px">
+        <label style="min-width:28px">總額</label>
+        <input type="number" id="cd-amt" placeholder="3000" oninput="updPrev()">
+      </div>
+      <div class="fr" id="cd-inst-row">
+        <label>分期</label>
+        <select id="cd-itype" onchange="toggleIF()">
+          <option value="0">不分期（一次付清）</option>
+          <option value="no">無息分期</option>
+          <option value="yes">有息分期</option>
+        </select>
+      </div>
+      <div id="i-fields" style="display:none">
+        <div class="fr">
+          <label>期數</label>
+          <input type="number" id="cd-periods" value="3" min="2" max="60" style="width:70px" oninput="updPrev()">
+          <div id="i-rate-w" style="display:none;align-items:center;gap:8px">
+            <label>年利率%</label>
+            <input type="number" id="cd-rate" value="0" step="0.01" style="width:78px" oninput="updPrev()">
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:4px">
+        <button class="btn btn-t" onclick="addCard()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增</button>
+        <span id="i-prev" style="font-size:12px;color:var(--txt3)"></span>
+      </div>
+      <div id="bank-cutoffs" style="font-size:11px;color:var(--txt3);margin-top:8px;line-height:2"></div>
+    </div>
+    <div class="card">
+      <div class="ct"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>各月應繳試算</div>
+      <div id="cbm"><div class="empty">新增信用卡消費後顯示各月應繳與剩餘預算</div></div>
+    </div>
+    <div class="card">
+      <div class="ct"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>消費明細</div>
+      <div id="card-empty" class="empty">尚未記錄</div>
+      <div class="tw"><table><thead><tr>
+        <th style="width:100px">日期</th><th style="width:60px">方式</th><th style="width:54px">銀行</th>
+        <th>品項</th><th style="width:56px">類別</th><th style="width:78px;text-align:right">金額</th>
+        <th style="width:62px;text-align:right">帳單月</th><th style="width:50px;text-align:right">分期</th>
+        <th style="width:34px"></th>
+      </tr></thead><tbody id="card-tbody"></tbody></table></div>
     </div>
   </div>
 </div>
 
-<!-- 預存本 -->
-<div class="pg" id="pg-presave">
-  <div class="ph"><div class="pt">預存本</div><div class="ps">每月固定先扣，備用大筆必要費用；自動計入固定支出</div></div>
-  <div class="info-box">每月預存扣款會直接從可支配預算中扣除，讓必要費用在花錢前就先備好。</div>
-  <div class="mg" id="pre-metrics"></div>
-  <button class="btn btn-p" style="margin-bottom:14px" onclick="openPreModal()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增預存項目</button>
-  <div id="pre-list"><div class="empty">尚未設定預存項目</div></div>
-</div>
+<!-- 存款 & 借貸 (合併預存本 + 存錢本 + 新增還款本/信貸/借還錢) -->
+<div class="pg" id="pg-funds">
+  <div class="ph"><div class="pt">存款 &amp; 借貸</div><div class="ps">預存備用、存錢目標、信貸還款、借還款追蹤</div></div>
+  <div class="stabs">
+    <button class="stab on" onclick="showFundSub('fsub-presave',this)">預存本</button>
+    <button class="stab" onclick="showFundSub('fsub-savings',this)">存錢本</button>
+    <button class="stab" onclick="showFundSub('fsub-loans',this)">信貸 &amp; 借還錢</button>
+  </div>
 
-<!-- 存錢本 -->
-<div class="pg" id="pg-savings">
-  <div class="ph"><div class="pt">存錢本</div><div class="ps">想要或必要但非急迫的目標；手動存入，不影響每月預算計算</div></div>
-  <div class="mg" id="sav-metrics"></div>
-  <button class="btn btn-t" style="margin-bottom:14px" onclick="openSavModal(null)"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增存錢目標</button>
-  <div id="sav-list"><div class="empty">尚未設定存錢目標</div></div>
+  <!-- 預存本 -->
+  <div id="fsub-presave">
+    <div class="info-box">每月預存扣款會直接從可支配預算中扣除，讓必要費用在花錢前就先備好。</div>
+    <div class="mg" id="pre-metrics"></div>
+    <button class="btn btn-p" style="margin-bottom:14px" onclick="openPreModal()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增預存項目</button>
+    <div id="pre-list"><div class="empty">尚未設定預存項目</div></div>
+  </div>
+
+  <!-- 存錢本 -->
+  <div id="fsub-savings" style="display:none">
+    <div class="mg" id="sav-metrics"></div>
+    <button class="btn btn-t" style="margin-bottom:14px" onclick="openSavModal(null)"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增存錢目標</button>
+    <div id="sav-list"><div class="empty">尚未設定存錢目標</div></div>
+  </div>
+
+  <!-- 信貸 & 借還錢 -->
+  <div id="fsub-loans" style="display:none">
+    <div class="mg" id="loan-metrics"></div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <button class="btn btn-r" onclick="openLoanModal('loan')"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增信貸</button>
+      <button class="btn btn-b" onclick="openLoanModal('borrow')"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增借出</button>
+      <button class="btn" onclick="openLoanModal('debt')"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增借入（欠人）</button>
+    </div>
+    <div id="loan-list"><div class="empty">尚未設定任何借貸紀錄</div></div>
+  </div>
 </div>
 
 <!-- 設定 -->
@@ -389,29 +446,30 @@ tr:hover td{background:var(--surf2)}
   <div class="modal">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
       <div class="modal-title" style="margin-bottom:0">編輯收入與固定支出</div>
-      <button class="btn-del" onclick="closeIncModal()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <button class="btn-del" onclick="closeIncModal()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
+    <div style="font-size:12px;color:var(--txt3);margin-bottom:4px">每年每月收入和支出可能不同，請依當月實際情況調整。</div>
     <div style="font-size:12px;color:var(--txt3);margin-bottom:12px">分期和預存費用由系統自動帶入，不需手填</div>
     <div id="inc-rows"></div>
     <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
-      <button class="btn btn-t" onclick="saveInc()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>儲存</button>
-      <button class="btn" onclick="addIncRow('income')"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>加收入</button>
-      <button class="btn" onclick="addIncRow('expense')"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>加固定支出</button>
+      <button class="btn btn-t" onclick="saveInc()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><polyline points="20 6 9 17 4 12"/></svg>儲存</button>
+      <button class="btn" onclick="addIncRow('income')"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><path d="M12 5v14M5 12h14"/></svg>加收入</button>
+      <button class="btn" onclick="addIncRow('expense')"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><path d="M12 5v14M5 12h14"/></svg>加固定支出</button>
     </div>
   </div>
 </div>
 
-<!-- 類別Modal (budget page) -->
+<!-- 類別Modal -->
 <div class="modal-wrap" id="cat-modal" onclick="if(event.target===this)closeCatModal()">
   <div class="modal">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
       <div class="modal-title" style="margin-bottom:0">編輯消費預算類別</div>
-      <button class="btn-del" onclick="closeCatModal()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <button class="btn-del" onclick="closeCatModal()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div id="cat-modal-rows"></div>
     <div style="display:flex;gap:8px;margin-top:14px">
-      <button class="btn btn-t" onclick="saveCatsFromModal()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>儲存</button>
-      <button class="btn" onclick="addCatRowModal()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增類別</button>
+      <button class="btn btn-t" onclick="saveCatsFromModal()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><polyline points="20 6 9 17 4 12"/></svg>儲存</button>
+      <button class="btn" onclick="addCatRowModal()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><path d="M12 5v14M5 12h14"/></svg>新增類別</button>
     </div>
   </div>
 </div>
@@ -421,7 +479,7 @@ tr:hover td{background:var(--surf2)}
   <div class="modal" id="pre-modal-inner">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
       <div class="modal-title" style="margin-bottom:0" id="pre-modal-title">新增預存項目</div>
-      <button class="btn-del" onclick="closePreModal()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <button class="btn-del" onclick="closePreModal()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="fr"><label>名稱</label><input type="text" id="pre-name" placeholder="機車保險、家家相簿…" style="flex:1"></div>
     <div class="fr">
@@ -440,7 +498,7 @@ tr:hover td{background:var(--surf2)}
     </div>
     <div class="fr"><label>備註</label><input type="text" id="pre-note" placeholder="用途說明" style="flex:1"></div>
     <div style="display:flex;gap:8px;margin-top:14px">
-      <button class="btn btn-p" id="pre-save-btn" onclick="savePre()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>儲存</button>
+      <button class="btn btn-p" id="pre-save-btn" onclick="savePre()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><polyline points="20 6 9 17 4 12"/></svg>儲存</button>
       <button class="btn" onclick="closePreModal()">取消</button>
     </div>
   </div>
@@ -451,7 +509,7 @@ tr:hover td{background:var(--surf2)}
   <div class="modal">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
       <div class="modal-title" style="margin-bottom:0" id="sav-modal-title">新增存錢目標</div>
-      <button class="btn-del" onclick="closeSavModal()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <button class="btn-del" onclick="closeSavModal()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="fr"><label>名稱</label><input type="text" id="sav-name" placeholder="印表機、旅遊基金…" style="flex:1"></div>
     <div class="fr"><label>目標金額</label><input type="number" id="sav-goal" placeholder="5000"></div>
@@ -459,7 +517,7 @@ tr:hover td{background:var(--surf2)}
     <div class="fr"><label>類型</label><select id="sav-type"><option>需要</option><option>想要</option></select></div>
     <div class="fr"><label>備註</label><input type="text" id="sav-note" placeholder="用途說明" style="flex:1"></div>
     <div style="display:flex;gap:8px;margin-top:14px">
-      <button class="btn btn-t" id="sav-save-btn" onclick="saveSav()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>儲存</button>
+      <button class="btn btn-t" id="sav-save-btn" onclick="saveSav()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><polyline points="20 6 9 17 4 12"/></svg>儲存</button>
       <button class="btn" onclick="closeSavModal()">取消</button>
     </div>
   </div>
@@ -470,20 +528,70 @@ tr:hover td{background:var(--surf2)}
   <div class="modal" style="width:320px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
       <div class="modal-title" style="margin-bottom:0" id="dep-title">存入金額</div>
-      <button class="btn-del" onclick="closeDepModal()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <button class="btn-del" onclick="closeDepModal()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="fr"><label>存入金額</label><input type="number" id="dep-amt" placeholder="500" style="flex:1"></div>
     <div style="display:flex;gap:8px;margin-top:14px">
-      <button class="btn btn-t" onclick="confirmDep()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>確認存入</button>
+      <button class="btn btn-t" onclick="confirmDep()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><polyline points="20 6 9 17 4 12"/></svg>確認存入</button>
       <button class="btn" onclick="closeDepModal()">取消</button>
     </div>
   </div>
 </div>
 
+<!-- 借貸Modal -->
+<div class="modal-wrap" id="loan-modal" onclick="if(event.target===this)closeLoanModal()">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="modal-title" style="margin-bottom:0" id="loan-modal-title">新增信貸</div>
+      <button class="btn-del" onclick="closeLoanModal()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <input type="hidden" id="loan-type-hidden">
+    <div class="fr"><label>名稱</label><input type="text" id="loan-name" placeholder="銀行信貸、小明…" style="flex:1"></div>
+    <div class="fr" id="loan-bank-row"><label>銀行/對象</label><input type="text" id="loan-bank" placeholder="玉山銀行" style="flex:1"></div>
+    <div class="fr"><label>本金</label><input type="number" id="loan-principal" placeholder="100000" oninput="calcLoanM()"></div>
+    <div class="fr" id="loan-rate-row"><label>年利率%</label><input type="number" id="loan-rate" value="0" step="0.01" style="width:90px" oninput="calcLoanM()">
+      <label style="min-width:28px">期數</label><input type="number" id="loan-periods" value="12" min="1" oninput="calcLoanM()">
+    </div>
+    <div class="fr" id="loan-monthly-row">
+      <label>每月還款</label>
+      <input type="number" id="loan-monthly-disp" placeholder="系統計算" style="width:120px">
+      <span id="loan-calc" style="font-size:12px;color:var(--txt3)"></span>
+    </div>
+    <div class="fr"><label>已還期數</label><input type="number" id="loan-paid" value="0" min="0" style="width:80px"></div>
+    <div class="fr"><label>起始日</label>
+      <div class="date-picker-wrap">
+        <input type="text" id="loan-date" placeholder="點選選擇日期" readonly style="width:140px;cursor:pointer" onclick="openCal('loan-date','loan-cal')">
+        <div class="cal-pop right" id="loan-cal" style="display:none"></div>
+      </div>
+    </div>
+    <div class="fr"><label>備註</label><input type="text" id="loan-note" placeholder="備註說明" style="flex:1"></div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn btn-t" onclick="saveLoan()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><polyline points="20 6 9 17 4 12"/></svg>儲存</button>
+      <button class="btn" onclick="closeLoanModal()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- 還款記錄Modal -->
+<div class="modal-wrap" id="repay-modal" onclick="if(event.target===this)closeRepayModal()">
+  <div class="modal" style="width:340px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="modal-title" style="margin-bottom:0" id="repay-title">還款</div>
+      <button class="btn-del" onclick="closeRepayModal()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="fr"><label>還款金額</label><input type="number" id="repay-amt" placeholder="10000" style="flex:1"></div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn btn-t" onclick="confirmRepay()"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2"><polyline points="20 6 9 17 4 12"/></svg>確認還款</button>
+      <button class="btn" onclick="closeRepayModal()">取消</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const SK='fapp_v7';
+const SK='fapp_v9';
 const icox=`<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M18 6L6 18M6 6l12 12"/></svg>`;
 const icoEdit=`<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`;
+const icoPlus=`<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M12 5v14M5 12h14"/></svg>`;
 
 // ── DEFAULTS ──────────────────────────────────────────────
 const DEF_BANKS=[
@@ -494,7 +602,6 @@ const DEF_BANKS=[
   {id:'b5',name:'台哥付你分期',cutoff:11,payDay:11},
   {id:'b6',name:'AFTEE',cutoff:6,payDay:6},
 ];
-// 付款方式：type= 'credit'|'debit'|'cash'
 const DEF_PAYTYPES=[
   {id:'pt1',name:'信用卡',type:'credit'},
   {id:'pt2',name:'金融卡',type:'debit'},
@@ -508,7 +615,6 @@ const DEF_CATS=[
   {name:'育兒',budget:4000},{name:'美妝',budget:500},
   {name:'家用',budget:2500},{name:'醫療',budget:500},
 ];
-// 5月最新分期資料（依圖片更新）
 const DEF_INST=[
   {id:10001,bank:'富邦銀行',item:'手機費用',totalAmt:11388,monthly:949,paid:7,total:12,rate:6.62,interest:true,remain:2847,active:true},
   {id:10002,bank:'富邦銀行',item:'飛利浦錄音筆',totalAmt:3140,monthly:349,paid:5,total:9,rate:0,interest:false,remain:1396,active:true},
@@ -539,9 +645,16 @@ const DEF_SAV=[
   {id:20006,name:'平衡板',goal:500,saved:0,type:'需要',note:'給孩子左右搖'},
 ];
 
+// Monthly-specific income data: keyed by "Y-MM"
+// Each month can have different incItems
+// S.monthlyIncome["2026-05"] = [{id,type,label,amount}]
+
 let S={
   selYM:{y:new Date().getFullYear(),m:new Date().getMonth()},
+  // Global default income items (used when no month-specific ones exist)
   incItems:[{id:1,type:'income',label:'薪資',amount:33300},{id:2,type:'expense',label:'其他固定',amount:0}],
+  // Per-month overrides
+  monthlyIncome:{},
   cats:JSON.parse(JSON.stringify(DEF_CATS)),
   cardCats:[...DEF_CARD_CATS],
   banks:JSON.parse(JSON.stringify(DEF_BANKS)),
@@ -550,12 +663,28 @@ let S={
   installments:JSON.parse(JSON.stringify(DEF_INST)),
   presaves:JSON.parse(JSON.stringify(DEF_PRE)),
   savings:JSON.parse(JSON.stringify(DEF_SAV)),
+  loans:[], // {id, type:'loan'|'borrow'|'debt', name, bank, principal, rate, periods, monthly, paid, paidAmt, date, note, active}
   payments:{},
 };
-let editingPreId=null, editingSavId=null, depTarget=null;
+let editingPreId=null,editingSavId=null,editingLoanId=null,depTarget=null,repayTarget=null;
+
+// Calendar state
+let calState={};
 
 function save(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}}
-function load(){try{const d=localStorage.getItem(SK);if(d){const p=JSON.parse(d);S={...S,...p};}}catch(e){}}
+function load(){
+  try{
+    const d=localStorage.getItem(SK);
+    if(d){
+      const p=JSON.parse(d);
+      // Migrate old format: if no monthlyIncome field, init it
+      if(!p.monthlyIncome) p.monthlyIncome={};
+      // Ensure loans array exists
+      if(!p.loans) p.loans=[];
+      S={...S,...p};
+    }
+  }catch(e){}
+}
 function fmt(n){return Math.round(n).toLocaleString('zh-TW');}
 function ymKey(y,m){return `${y}-${String(m+1).padStart(2,'0')}`;}
 function ymLabel({y,m}){return `${y} 年 ${m+1} 月`;}
@@ -566,6 +695,7 @@ function parseDate(s){
   if(p.length===2){const now=new Date(),m=parseInt(p[0])-1,d=parseInt(p[1]);if(!isNaN(m+d))return{y:now.getFullYear(),m,d};}
   return null;
 }
+function dateStr(y,m,d){return `${y}/${String(m+1).padStart(2,'0')}/${String(d).padStart(2,'0')}`;}
 function getBankById(id){return S.banks.find(b=>b.id===id)||S.banks.find(b=>b.name===id)||null;}
 function getBillYM(dateStr,bankId){
   const p=parseDate(dateStr);if(!p)return null;
@@ -573,11 +703,24 @@ function getBillYM(dateStr,bankId){
   let{y,m,d}=p;if(d>cut){m++;if(m>11){m=0;y++;}}
   return{y,m};
 }
-function getTotalIncome(){return S.incItems.filter(x=>x.type==='income').reduce((a,x)=>a+(x.amount||0),0);}
-function getTotalExpense(){return S.incItems.filter(x=>x.type==='expense').reduce((a,x)=>a+(x.amount||0),0);}
+
+// Per-month income helpers
+function getMonthIncItems(y,m){
+  const k=ymKey(y,m);
+  return S.monthlyIncome[k]||S.incItems;
+}
+function setMonthIncItems(y,m,items){
+  const k=ymKey(y,m);
+  S.monthlyIncome[k]=items;
+}
+function getTotalIncome(items){return (items||S.incItems).filter(x=>x.type==='income').reduce((a,x)=>a+(x.amount||0),0);}
+function getTotalExpense(items){return (items||S.incItems).filter(x=>x.type==='expense').reduce((a,x)=>a+(x.amount||0),0);}
 function getInstTotal(){return S.installments.filter(x=>x.active&&x.remain>0).reduce((a,x)=>a+x.monthly,0);}
 function getPreTotal(){return S.presaves.reduce((a,x)=>a+x.monthly,0);}
-function getDisposable(){return getTotalIncome()-getTotalExpense()-getInstTotal()-getPreTotal();}
+function getDisposable(y,m){
+  const items=getMonthIncItems(y!==undefined?y:S.selYM.y, m!==undefined?m:S.selYM.m);
+  return getTotalIncome(items)-getTotalExpense(items)-getInstTotal()-getPreTotal();
+}
 function getDailyYM(y,m){return S.daily.filter(d=>{const p=parseDate(d.date);return p&&p.y===y&&p.m===m;});}
 function getCardBillYM(y,m){return S.cards.filter(c=>{if(c.paytypeType!=='credit'&&c.paytypeType!=='debit_bill')return false;const bm=getBillYM(c.date,c.bankId);return bm&&bm.y===y&&bm.m===m;});}
 function instMonthly(total,periods,rate,wi){
@@ -585,7 +728,73 @@ function instMonthly(total,periods,rate,wi){
   const r=rate/100/12;return total*r*Math.pow(1+r,periods)/(Math.pow(1+r,periods)-1);
 }
 
-// NAV
+// ── CALENDAR ──────────────────────────────────────────────
+function openCal(inputId,calId){
+  // Close all other cals
+  document.querySelectorAll('.cal-pop').forEach(c=>{if(c.id!==calId)c.style.display='none';});
+  const cal=document.getElementById(calId);
+  if(cal.style.display==='block'){cal.style.display='none';return;}
+  const inp=document.getElementById(inputId);
+  const val=parseDate(inp.value);
+  const now=new Date();
+  const cy=val?val.y:now.getFullYear();
+  const cm=val?val.m:now.getMonth();
+  calState[calId]={inputId,y:cy,m:cm};
+  renderCal(calId);
+  cal.style.display='block';
+}
+function renderCal(calId){
+  const st=calState[calId];const{y,m,inputId}=st;
+  const now=new Date();
+  const firstDay=new Date(y,m,1).getDay();// 0=Sun
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const inp=document.getElementById(inputId);
+  const selVal=parseDate(inp.value);
+  const selD=selVal&&selVal.y===y&&selVal.m===m?selVal.d:-1;
+  const todayD=(now.getFullYear()===y&&now.getMonth()===m)?now.getDate():-1;
+  const mnames=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  let html=`<div class="cal-header">
+    <button class="cal-nav" onclick="calNav('${calId}',-1)"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div class="cal-month">${y}年 ${mnames[m]}</div>
+    <button class="cal-nav" onclick="calNav('${calId}',1)"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+  </div>
+  <div class="cal-grid">
+    <div class="cal-dow">日</div><div class="cal-dow">一</div><div class="cal-dow">二</div><div class="cal-dow">三</div><div class="cal-dow">四</div><div class="cal-dow">五</div><div class="cal-dow">六</div>`;
+  for(let i=0;i<firstDay;i++)html+=`<div class="cal-day empty"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const cls=(d===selD?'sel':(d===todayD?'today':''));
+    html+=`<button class="cal-day ${cls}" onclick="pickDay('${calId}',${d})">${d}</button>`;
+  }
+  html+='</div>';
+  // Quick: today button
+  html+=`<div style="margin-top:8px;display:flex;gap:6px"><button class="btn btn-sm btn-t" onclick="pickToday('${calId}')">今天</button><button class="btn btn-sm" onclick="document.getElementById('${calId}').style.display='none'">關閉</button></div>`;
+  document.getElementById(calId).innerHTML=html;
+}
+function calNav(calId,dir){
+  const st=calState[calId];st.m+=dir;if(st.m<0){st.m=11;st.y--;}if(st.m>11){st.m=0;st.y++;}renderCal(calId);}
+function pickDay(calId,d){
+  const st=calState[calId];
+  const s=dateStr(st.y,st.m,d);
+  document.getElementById(st.inputId).value=s;
+  document.getElementById(calId).style.display='none';
+  // trigger dependent logic
+  if(st.inputId==='cd-date'){}
+}
+function pickToday(calId){
+  const now=new Date();
+  const s=dateStr(now.getFullYear(),now.getMonth(),now.getDate());
+  const st=calState[calId];
+  document.getElementById(st.inputId).value=s;
+  document.getElementById(calId).style.display='none';
+}
+// Close cal on outside click
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.date-picker-wrap')&&!e.target.closest('.cal-nav')){
+    document.querySelectorAll('.cal-pop').forEach(c=>c.style.display='none');
+  }
+});
+
+// ── NAV ──────────────────────────────────────────────────
 function sw(id,btn){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.ni').forEach(b=>b.classList.remove('on'));
@@ -594,40 +803,48 @@ function sw(id,btn){
   renderAll();
 }
 function showSub(id,btn){
-  ['sub-budget','sub-payment'].forEach(s=>document.getElementById(s).style.display='none');
-  document.querySelectorAll('.stab').forEach(b=>b.classList.remove('on'));
+  ['sub-budget','sub-payment','sub-installments'].forEach(s=>document.getElementById(s).style.display='none');
+  document.querySelectorAll('#pg-overview .stab').forEach(b=>b.classList.remove('on'));
   document.getElementById(id).style.display='block';
   btn.classList.add('on');
   if(id==='sub-payment')renderPayment();
+  if(id==='sub-installments')renderInstallmentsOv();
+}
+function showDailySub(id,btn){
+  ['dsub-daily','dsub-card'].forEach(s=>document.getElementById(s).style.display='none');
+  document.querySelectorAll('#pg-daily .stab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).style.display='block';
+  btn.classList.add('on');
+}
+function showFundSub(id,btn){
+  ['fsub-presave','fsub-savings','fsub-loans'].forEach(s=>document.getElementById(s).style.display='none');
+  document.querySelectorAll('#pg-funds .stab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).style.display='block';
+  btn.classList.add('on');
 }
 function changeYM(d){S.selYM=shiftYM(S.selYM,d);save();renderBudget();renderDaily();renderCards();}
 
-// SELECT helpers
+// ── SELECT helpers ──────────────────────────────────────
 function updateCatSelect(){
   const el=document.getElementById('dd-cat');const prev=el.value;
   el.innerHTML=[...S.cats.map(c=>c.name),'其他'].map(c=>`<option${c===prev?' selected':''}>${c}</option>`).join('');
 }
 function updateBankSelects(){
-  const creditTypes=S.paytypes.filter(p=>p.type==='credit');
-  // card page bank
   const cb=document.getElementById('cd-bank');
   const prev=cb?cb.value:'';
   if(cb)cb.innerHTML=S.banks.map(b=>`<option value="${b.id}"${b.id===prev?' selected':''}>${b.name}</option>`).join('');
-  // card page paytype
   const cp=document.getElementById('cd-paytype');
   if(cp){const pp=cp.value;cp.innerHTML=S.paytypes.map(p=>`<option value="${p.id}"${p.id===pp?' selected':''}>${p.name}</option>`).join('');}
-  // card cats
   ['cd-cardcat','cd-cashcat'].forEach(id=>{
     const el=document.getElementById(id);
     if(el){const pv=el.value;el.innerHTML=S.cardCats.map(c=>`<option${c===pv?' selected':''}>${c}</option>`).join('');}
   });
-  // cutoff info
   const ci=document.getElementById('bank-cutoffs');
   if(ci)ci.textContent='出帳日：'+S.banks.map(b=>`${b.name.replace('銀行','').replace('付你分期','')} ${b.cutoff}日`).join('｜');
 }
-
 function toggleBankField(){
-  const pt=S.paytypes.find(p=>p.id===document.getElementById('cd-paytype').value);
+  const ptEl=document.getElementById('cd-paytype');if(!ptEl)return;
+  const pt=S.paytypes.find(p=>p.id===ptEl.value);
   const isCredit=pt&&pt.type==='credit';
   const isDebit=pt&&pt.type==='debit';
   document.getElementById('cd-bank-row').style.display=(isCredit||isDebit)?'flex':'none';
@@ -636,10 +853,17 @@ function toggleBankField(){
   if(!isCredit){document.getElementById('i-fields').style.display='none';}
 }
 
-// INCOME
+// ── INCOME (per-month) ──────────────────────────────────
 function openIncModal(){
-  let html='';
-  S.incItems.forEach((item,i)=>{
+  const{y,m}=S.selYM;
+  const items=getMonthIncItems(y,m);
+  const k=ymKey(y,m);
+  const isOverride=!!S.monthlyIncome[k];
+  let html=`<div style="background:var(--a50);border:0.5px solid var(--a200);border-radius:var(--r);padding:8px 12px;font-size:12px;color:var(--a800);margin-bottom:12px">
+    正在編輯 <strong>${ymLabel(S.selYM)}</strong> 的收支。不同月份可分開設定。
+    ${isOverride?`<button class="btn btn-sm" style="margin-left:8px;font-size:11px" onclick="resetMonthInc()">重置為預設</button>`:''}
+  </div>`;
+  items.forEach((item,i)=>{
     const isInc=item.type==='income';
     html+=`<div class="fr" style="margin-bottom:8px">
       <span class="tag ${isInc?'tg-t':'tg-r'}" style="flex-shrink:0">${isInc?'收入':'支出'}</span>
@@ -652,38 +876,67 @@ function openIncModal(){
   document.getElementById('inc-modal').classList.add('show');
 }
 function closeIncModal(){document.getElementById('inc-modal').classList.remove('show');}
-function addIncRow(type){S.incItems.push({id:Date.now(),type,label:type==='income'?'新收入':'新固定支出',amount:0});openIncModal();}
-function delIncRow(i){S.incItems.splice(i,1);openIncModal();}
+function addIncRow(type){
+  const{y,m}=S.selYM;
+  const items=[...getMonthIncItems(y,m)];
+  items.push({id:Date.now(),type,label:type==='income'?'新收入':'新固定支出',amount:0});
+  setMonthIncItems(y,m,items);
+  openIncModal();
+}
+function delIncRow(i){
+  const{y,m}=S.selYM;
+  const items=[...getMonthIncItems(y,m)];
+  items.splice(i,1);
+  setMonthIncItems(y,m,items);
+  openIncModal();
+}
+function resetMonthInc(){
+  const{y,m}=S.selYM;
+  delete S.monthlyIncome[ymKey(y,m)];
+  openIncModal();
+}
 function saveInc(){
-  S.incItems=S.incItems.map((item,i)=>({...item,label:(document.getElementById('ie-l-'+i).value||item.label).trim(),amount:parseFloat(document.getElementById('ie-a-'+i).value)||0}));
+  const{y,m}=S.selYM;
+  const items=getMonthIncItems(y,m).map((item,i)=>({
+    ...item,
+    label:(document.getElementById('ie-l-'+i).value||item.label).trim(),
+    amount:parseFloat(document.getElementById('ie-a-'+i).value)||0
+  }));
+  setMonthIncItems(y,m,items);
+  // Also update global default if no override existed
+  const k=ymKey(y,m);
+  S.monthlyIncome[k]=items;
   closeIncModal();save();renderBudget();renderDaily();renderCards();
 }
 function renderIncSummary(){
-  const inc=S.incItems.filter(x=>x.type==='income');
-  const exp=S.incItems.filter(x=>x.type==='expense');
+  const{y,m}=S.selYM;
+  const items=getMonthIncItems(y,m);
+  const inc=items.filter(x=>x.type==='income');
+  const exp=items.filter(x=>x.type==='expense');
   let html='';
   if(inc.length){html+=`<div style="font-size:11px;font-weight:700;color:var(--txt3);letter-spacing:.3px;margin-bottom:6px">收入</div>`;inc.forEach(x=>{html+=`<div class="fr" style="margin-bottom:4px"><span style="font-size:13px;flex:1">${x.label}</span><span style="font-weight:600;color:var(--t400)">+$${fmt(x.amount)}</span></div>`;});}
   if(exp.length){html+=`<div style="font-size:11px;font-weight:700;color:var(--txt3);letter-spacing:.3px;margin:8px 0 6px">固定支出</div>`;exp.forEach(x=>{html+=`<div class="fr" style="margin-bottom:4px"><span style="font-size:13px;flex:1">${x.label}</span><span style="font-weight:600;color:var(--r400)">-$${fmt(x.amount)}</span></div>`;});}
   document.getElementById('inc-summary').innerHTML=html||'<div style="font-size:13px;color:var(--txt3)">尚未設定，點「編輯項目」新增</div>';
 }
 
-// BUDGET
+// ── BUDGET ──────────────────────────────────────────────
 function renderBudget(){
   document.getElementById('ym-disp').textContent=ymLabel(S.selYM);
+  const{y,m}=S.selYM;
   renderIncSummary();
   const it=getInstTotal(),pt=getPreTotal();
   document.getElementById('inst-auto').textContent='$'+fmt(it);
   document.getElementById('presave-auto').textContent='$'+fmt(pt);
-  const disp=getDisposable();
-  const{y,m}=S.selYM;
+  const items=getMonthIncItems(y,m);
+  const disp=getDisposable(y,m);
   const dAmt=getDailyYM(y,m).reduce((a,x)=>a+x.amt,0);
   const cAmt=getCardBillYM(y,m).reduce((a,x)=>a+x.amt,0);
   const rem=disp-dAmt-cAmt;
   const col=rem>disp*.4?'var(--t400)':rem>0?'var(--a400)':'var(--r400)';
-  const pct=Math.max(0,Math.min(100,Math.round((dAmt+cAmt)/disp*100)));
+  const pct=disp>0?Math.max(0,Math.min(100,Math.round((dAmt+cAmt)/disp*100))):0;
   document.getElementById('bud-metrics').innerHTML=`
-    <div class="mc"><div class="ml">月收入合計</div><div class="mv">$${fmt(getTotalIncome())}</div></div>
-    <div class="mc"><div class="ml">固定扣款</div><div class="mv" style="color:var(--r400)">-$${fmt(getTotalExpense()+it+pt)}</div><div class="ms">支出+分期+預存</div></div>
+    <div class="mc"><div class="ml">月收入合計</div><div class="mv">$${fmt(getTotalIncome(items))}</div></div>
+    <div class="mc"><div class="ml">固定扣款</div><div class="mv" style="color:var(--r400)">-$${fmt(getTotalExpense(items)+it+pt)}</div><div class="ms">支出+分期+預存</div></div>
     <div class="mc"><div class="ml">可支配預算</div><div class="mv">$${fmt(disp)}</div></div>
     <div class="mc"><div class="ml">${m+1}月 剩餘</div><div class="mv" style="color:${col}">$${fmt(rem)}</div><div class="ms">已用 ${pct}%</div></div>
   `;
@@ -711,7 +964,6 @@ function renderBudget(){
   });
   document.getElementById('bud-cats').innerHTML=html||'<div class="empty">尚未設定類別</div>';
 }
-// cat modal from budget page
 function openCatModal(){
   let html='';
   S.cats.forEach((c,i)=>{html+=`<div class="fr" style="margin-bottom:8px"><input type="text" value="${c.name}" id="cm-n-${i}" style="width:90px"><label style="min-width:36px;font-size:12px">預算</label><input type="number" value="${c.budget||''}" placeholder="彈性" id="cm-b-${i}" style="width:86px"><button class="btn-del" onclick="delCatRowModal(${i})">${icox}</button></div>`;});
@@ -726,13 +978,13 @@ function saveCatsFromModal(){
   closeCatModal();save();renderBudget();updateCatSelect();renderSettings();
 }
 
-// DAILY
+// ── DAILY ──────────────────────────────────────────────
 function addDaily(){
   const date=document.getElementById('dd-date').value.trim();
   const cat=document.getElementById('dd-cat').value;
   const note=document.getElementById('dd-note').value.trim();
   const amt=parseFloat(document.getElementById('dd-amt').value);
-  if(!parseDate(date)){alert('日期格式：2026/05/19 或 05/19');return;}
+  if(!parseDate(date)){alert('請點選日期');return;}
   if(!amt||isNaN(amt)){alert('請填寫金額');return;}
   S.daily.unshift({id:Date.now(),date,cat,note,amt});
   document.getElementById('dd-amt').value='';document.getElementById('dd-note').value='';
@@ -741,7 +993,8 @@ function addDaily(){
 function delDaily(id){S.daily=S.daily.filter(d=>d.id!==id);save();renderDaily();renderBudget();}
 function renderDaily(){
   const{y,m}=S.selYM;
-  const disp=getDisposable();
+  document.getElementById('ym-disp2').textContent=ymLabel(S.selYM);
+  const disp=getDisposable(y,m);
   const dAmt=getDailyYM(y,m).reduce((a,x)=>a+x.amt,0);
   const cAmt=getCardBillYM(y,m).reduce((a,x)=>a+x.amt,0);
   const rem=disp-dAmt-cAmt;const col=rem>0?'var(--t400)':'var(--r400)';
@@ -751,6 +1004,7 @@ function renderDaily(){
     <div class="mc"><div class="ml">剩餘可用預算</div><div class="mv" style="color:${col}">$${fmt(rem)}</div></div>
   `;
   const tbody=document.getElementById('daily-tbody');const empty=document.getElementById('daily-empty');
+  const thisMonthData=getDailyYM(y,m);
   if(!S.daily.length){empty.style.display='block';tbody.innerHTML='';document.getElementById('cat-bkd').innerHTML='<div class="empty" style="padding:14px">本月尚無消費</div>';return;}
   empty.style.display='none';
   tbody.innerHTML=S.daily.map(d=>`<tr>
@@ -760,7 +1014,7 @@ function renderDaily(){
     <td style="text-align:right;font-weight:700">$${fmt(d.amt)}</td>
     <td><button class="btn-del" onclick="delDaily(${d.id})">${icox}</button></td>
   </tr>`).join('');
-  const cats={};getDailyYM(y,m).forEach(d=>{cats[d.cat]=(cats[d.cat]||0)+d.amt;});
+  const cats={};thisMonthData.forEach(d=>{cats[d.cat]=(cats[d.cat]||0)+d.amt;});
   if(!Object.keys(cats).length){document.getElementById('cat-bkd').innerHTML='<div class="empty" style="padding:14px">本月尚無消費</div>';return;}
   const tot=Object.values(cats).reduce((a,v)=>a+v,0);
   document.getElementById('cat-bkd').innerHTML=Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([k,v])=>{
@@ -769,7 +1023,7 @@ function renderDaily(){
   }).join('');
 }
 
-// CARDS
+// ── CARDS ──────────────────────────────────────────────
 function toggleIF(){
   const t=document.getElementById('cd-itype').value;
   document.getElementById('i-fields').style.display=t==='0'?'none':'block';
@@ -795,7 +1049,7 @@ function addCard(){
   const cat=isCredit||isDebit?document.getElementById('cd-cardcat').value:document.getElementById('cd-cashcat').value;
   const item=document.getElementById('cd-item').value.trim();
   const amt=parseFloat(document.getElementById('cd-amt').value);
-  if(!parseDate(date)){alert('日期格式：2026/05/19 或 05/19');return;}
+  if(!parseDate(date)){alert('請點選日期');return;}
   if(!amt||isNaN(amt)){alert('請填寫金額');return;}
   const bm=isCredit&&bankId?getBillYM(date,bankId):null;
   const itype=isCredit?document.getElementById('cd-itype').value:'0';
@@ -819,20 +1073,22 @@ function delCard(id){
   save();renderCards();renderInstallments();renderBudget();
 }
 function renderCards(){
-  const disp=getDisposable();
+  const{y,m}=S.selYM;
+  const disp=getDisposable(y,m);
   const byM={};
   S.cards.filter(c=>c.paytypeType==='credit'&&c.billY>0).forEach(c=>{const k=`${c.billY}-${c.billM}`;byM[k]=(byM[k]||0)+c.amt;});
   const cbm=document.getElementById('cbm');
   if(!Object.keys(byM).length){cbm.innerHTML='<div class="empty">新增信用卡消費後顯示各月應繳與剩餘預算</div>';}
   else cbm.innerHTML=Object.keys(byM).sort().map(k=>{
-    const[ys,ms]=k.split('-');const y=parseInt(ys),m=parseInt(ms);
-    const cAmt=byM[k];const dAmt=getDailyYM(y,m).reduce((a,x)=>a+x.amt,0);
-    const rem=disp-dAmt-cAmt;const col=rem>disp*.4?'var(--t400)':rem>0?'var(--a400)':'var(--r400)';
-    const bc=rem>disp*.4?'bg':rem>0?'bwa':'br';
-    const pct=Math.max(0,Math.min(100,Math.round((dAmt+cAmt)/disp*100)));
+    const[ys,ms]=k.split('-');const ky=parseInt(ys),km=parseInt(ms);
+    const cAmt=byM[k];const dAmt=getDailyYM(ky,km).reduce((a,x)=>a+x.amt,0);
+    const dispM=getDisposable(ky,km);
+    const rem=dispM-dAmt-cAmt;const col=rem>dispM*.4?'var(--t400)':rem>0?'var(--a400)':'var(--r400)';
+    const bc=rem>dispM*.4?'bg':rem>0?'bwa':'br';
+    const pct=dispM>0?Math.max(0,Math.min(100,Math.round((dAmt+cAmt)/dispM*100))):0;
     return `<div style="padding:12px 0;border-bottom:0.5px solid var(--bd)">
       <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-        <span style="font-size:14px;font-weight:700">${y}年${m+1}月 應繳</span>
+        <span style="font-size:14px;font-weight:700">${ky}年${km+1}月 應繳</span>
         <span style="font-size:16px;font-weight:800;color:var(--b600)">$${fmt(cAmt)}</span>
       </div>
       <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--txt3);margin-bottom:5px">
@@ -858,7 +1114,7 @@ function renderCards(){
   </tr>`).join('');
 }
 
-// PAYMENT
+// ── PAYMENT ──────────────────────────────────────────────
 function renderPayment(){
   const{y,m}=S.selYM;const pk=ymKey(y,m);
   const active=S.installments.filter(x=>x.active&&x.remain>0);
@@ -873,7 +1129,7 @@ function renderPayment(){
     <div class="mc"><div class="ml">分期已確認</div><div class="mv" style="color:var(--t400)">${paidCnt}/${active.length}</div></div>
   `;
   document.getElementById('pay-inst-list').innerHTML=!active.length?'<div class="empty">本月無進行中分期</div>':
-    active.map(x=>{const pk2=`${pk}-${x.id}`;const paid=!!S.payments[pk2];const pct=Math.round(x.paid/x.total*100);
+    active.map(x=>{const pk2=`${pk}-${x.id}`;const paid=!!S.payments[pk2];const pct=x.total>0?Math.round(x.paid/x.total*100):0;
       return `<div class="pay-item${paid?' pay-done':''}">
         <input type="checkbox" class="pay-chk"${paid?' checked':''} onchange="togglePay('${pk2}',${x.id},this.checked)">
         <div class="pay-info">
@@ -900,38 +1156,71 @@ function togglePay(pk,id,checked){
     if(checked&&inst.paid<inst.total){inst.paid++;inst.remain=Math.max(0,inst.remain-inst.monthly);if(inst.paid>=inst.total){inst.active=false;inst.remain=0;}}
     else if(!checked&&inst.paid>0){inst.paid--;inst.remain=Math.min(inst.totalAmt,inst.remain+inst.monthly);inst.active=true;}
   }
-  save();renderPayment();renderInstallments();renderBudget();
+  save();renderPayment();renderInstallmentsOv();renderBudget();
 }
 
-// INSTALLMENTS
-function renderInstallments(){
+// ── INSTALLMENTS (overview sub-tab) ──────────────────────
+function renderInstallmentsOv(){
   const active=S.installments.filter(x=>x.active&&x.remain>0);
   const done=S.installments.filter(x=>!x.active||x.remain===0);
   const tot=active.reduce((a,x)=>a+x.monthly,0);
   const interest=active.filter(x=>x.interest&&x.rate>0);
-  document.getElementById('inst-metrics').innerHTML=`
+  const ovMetrics=document.getElementById('inst-metrics-ov');
+  if(ovMetrics)ovMetrics.innerHTML=`
     <div class="mc"><div class="ml">每月固定分期</div><div class="mv">$${fmt(tot)}</div><div class="ms">${active.length} 筆進行中</div></div>
     <div class="mc"><div class="ml">總未還餘額</div><div class="mv" style="color:var(--r400)">$${fmt(active.reduce((a,x)=>a+x.remain,0))}</div></div>
     <div class="mc"><div class="ml">有息分期</div><div class="mv">${interest.length} 筆</div><div class="ms">${interest.length?'最高 '+Math.max(...interest.map(x=>x.rate))+'%':''}</div></div>
   `;
-  document.getElementById('inst-total').textContent='$'+fmt(tot);
-  const intEl=document.getElementById('inst-int');
-  if(!interest.length){intEl.innerHTML='<div class="empty">目前無有息分期</div>';}
-  else intEl.innerHTML=`<div class="tw"><table><thead><tr><th>品項</th><th style="width:75px">銀行</th><th style="width:62px">年利率</th><th style="width:78px;text-align:right">未還</th></tr></thead><tbody>`+
-    interest.sort((a,b)=>b.rate-a.rate).map(x=>`<tr><td>${x.item}</td><td><span class="tag tg-b" style="font-size:11px">${x.bank}</span></td><td style="font-weight:700;color:${x.rate>10?'var(--r400)':'var(--a400)'}">${x.rate}%</td><td style="text-align:right">$${fmt(x.remain)}</td></tr>`).join('')+'</tbody></table></div>';
-  document.getElementById('inst-tbody').innerHTML=[...active,...done].map(x=>{
-    const fin=x.remain===0||!x.active;const pct=Math.round(x.paid/x.total*100);
-    return `<tr style="${fin?'opacity:.5':''}"><td>${x.item}</td><td><span class="tag tg-b" style="font-size:11px">${x.bank}</span></td>
-      <td style="font-size:12px">${x.paid}/${x.total}期<div class="bw" style="width:72px;margin-top:3px"><div class="bar bg" style="width:${pct}%"></div></div></td>
-      <td style="text-align:right">$${fmt(x.monthly)}</td>
+  const intEl=document.getElementById('inst-int-ov');
+  if(intEl){
+    if(!interest.length){intEl.innerHTML='<div class="empty">目前無有息分期</div>';}
+    else intEl.innerHTML=`<div class="tw"><table><thead><tr><th>品項</th><th style="width:75px">銀行</th><th style="width:62px">年利率</th><th style="width:78px;text-align:right">未還</th></tr></thead><tbody>`+
+      interest.sort((a,b)=>b.rate-a.rate).map(x=>`<tr><td>${x.item}</td><td><span class="tag tg-b" style="font-size:11px">${x.bank}</span></td><td style="font-weight:700;color:${x.rate>10?'var(--r400)':'var(--a400)'}">${x.rate}%</td><td style="text-align:right">$${fmt(x.remain)}</td></tr>`).join('')+'</tbody></table></div>';
+  }
+  const totEl=document.getElementById('inst-total-ov');
+  if(totEl)totEl.textContent='$'+fmt(tot);
+  const tbody=document.getElementById('inst-tbody-ov');
+  if(tbody)tbody.innerHTML=[...active,...done].map(x=>{
+    const fin=x.remain===0||!x.active;const pct=x.total>0?Math.round(x.paid/x.total*100):0;
+    return `<tr style="${fin?'opacity:.5':''}">
+      <td>${x.item}</td>
+      <td><span class="tag tg-b" style="font-size:11px">${x.bank}</span></td>
+      <td class="inst-edit-cell" style="font-size:12px">
+        <input type="number" value="${x.paid}" min="0" max="${x.total}" style="width:42px" onchange="editInstPaid(${x.id},this.value)" title="已付期數">/<input type="number" value="${x.total}" min="1" max="120" style="width:42px" onchange="editInstTotal(${x.id},this.value)" title="總期數">期
+        <div class="bw" style="width:60px;margin-top:3px"><div class="bar bg" style="width:${pct}%"></div></div>
+      </td>
+      <td style="text-align:right">
+        <input type="number" value="${x.monthly}" min="0" style="width:70px;font-size:12px" onchange="editInstMonthly(${x.id},this.value)" title="月繳金額">
+      </td>
       <td style="text-align:right">${fin?'<span class="tag tg-t">結清</span>':'$'+fmt(x.remain)}</td>
       <td><button class="btn-del" onclick="delInst(${x.id})">${icox}</button></td>
     </tr>`;
   }).join('');
 }
-function delInst(id){if(!confirm('確定刪除此分期？'))return;S.installments=S.installments.filter(x=>x.id!==id);save();renderInstallments();renderBudget();}
+function editInstPaid(id,val){
+  const x=S.installments.find(i=>i.id===id);if(!x)return;
+  const paid=Math.max(0,Math.min(parseInt(val)||0,x.total));
+  x.paid=paid;
+  x.remain=Math.max(0,x.totalAmt-x.monthly*paid);
+  x.active=paid<x.total;
+  save();renderInstallmentsOv();renderBudget();
+}
+function editInstTotal(id,val){
+  const x=S.installments.find(i=>i.id===id);if(!x)return;
+  const total=Math.max(1,parseInt(val)||1);
+  x.total=total;
+  if(x.paid>=total){x.active=false;x.remain=0;}
+  save();renderInstallmentsOv();renderBudget();
+}
+function editInstMonthly(id,val){
+  const x=S.installments.find(i=>i.id===id);if(!x)return;
+  x.monthly=Math.max(0,parseFloat(val)||0);
+  save();renderInstallmentsOv();renderBudget();
+}
+function renderInstallments(){renderInstallmentsOv();}
+function delInst(id){if(!confirm('確定刪除此分期？'))return;S.installments=S.installments.filter(x=>x.id!==id);save();renderInstallmentsOv();renderBudget();}
 
-// PRESAVE
+// ── PRESAVE ──────────────────────────────────────────────
 function togglePreMode(){
   const m=document.getElementById('pre-mode').value;
   document.getElementById('pre-fixed-f').style.display=m==='fixed'?'block':'none';
@@ -975,7 +1264,6 @@ function savePre(){
   closePreModal();save();renderPresaves();renderBudget();
 }
 function delPre(id){if(!confirm('確定刪除此預存項目？'))return;S.presaves=S.presaves.filter(x=>x.id!==id);save();renderPresaves();renderBudget();}
-
 function openDepModal(id,type){
   depTarget={id,type};
   const item=type==='pre'?S.presaves.find(x=>x.id===id):S.savings.find(x=>x.id===id);
@@ -991,7 +1279,6 @@ function confirmDep(){
   else{const item=S.savings.find(x=>x.id===depTarget.id);if(item)item.saved=Math.max(0,item.saved+amt);closeDepModal();save();renderSavings();}
 }
 function updatePreSaved(id,val){const x=S.presaves.find(x=>x.id===id);if(x){x.saved=Math.max(0,parseFloat(val)||0);save();renderPresaves();}}
-
 function renderPresaves(){
   const tot=S.presaves.reduce((a,x)=>a+x.monthly,0);
   const totalSaved=S.presaves.reduce((a,x)=>a+x.saved,0);
@@ -1021,7 +1308,7 @@ function renderPresaves(){
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div style="font-size:12px;color:var(--txt3)">已累積 <strong style="color:var(--txt2)">$${fmt(x.saved)}</strong>${isGoal&&monthsLeft>0?` · 還需約 ${monthsLeft} 個月`:''}${isGoal&&x.saved>=x.goal?'<span class="tag tg-t" style="margin-left:4px;font-size:10px">達標</span>':''}</div>
         <div style="display:flex;gap:6px">
-          <button class="btn btn-sm btn-p" onclick="openDepModal(${x.id},'pre')"><svg viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M12 5v14M5 12h14"/></svg>存入</button>
+          <button class="btn btn-sm btn-p" onclick="openDepModal(${x.id},'pre')">${icoPlus}存入</button>
           <input type="number" value="${x.saved}" min="0" style="width:82px;font-size:12px" onchange="updatePreSaved(${x.id},this.value)" title="直接修改已存總額">
         </div>
       </div>
@@ -1029,7 +1316,7 @@ function renderPresaves(){
   }).join('');
 }
 
-// SAVINGS
+// ── SAVINGS ──────────────────────────────────────────────
 function openSavModal(id){
   editingSavId=id||null;
   const item=id?S.savings.find(x=>x.id===id):null;
@@ -1088,7 +1375,7 @@ function renderSavings(){
       <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
         <span style="color:var(--txt3)">$${fmt(x.saved)} / $${fmt(x.goal)}${p>=100?' <span class="tag tg-t" style="font-size:10px">達成</span>':''}</span>
         <div style="display:flex;gap:6px;align-items:center">
-          <button class="btn btn-sm btn-t" onclick="openDepModal(${x.id},'sav')"><svg viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M12 5v14M5 12h14"/></svg>存入</button>
+          <button class="btn btn-sm btn-t" onclick="openDepModal(${x.id},'sav')">${icoPlus}存入</button>
           <input type="number" value="${x.saved}" min="0" style="width:82px;font-size:12px" onchange="updateSavSaved(${x.id},this.value)" title="直接修改已存總額">
         </div>
       </div>
@@ -1096,9 +1383,142 @@ function renderSavings(){
   }).join('');
 }
 
-// SETTINGS
+// ── LOANS (信貸 & 借還錢) ──────────────────────────────
+function calcLoanM(){
+  const principal=parseFloat(document.getElementById('loan-principal').value)||0;
+  const rate=parseFloat(document.getElementById('loan-rate').value)||0;
+  const periods=parseInt(document.getElementById('loan-periods').value)||12;
+  if(!principal){document.getElementById('loan-calc').textContent='';return;}
+  let mo;
+  if(rate>0){
+    const r=rate/100/12;
+    mo=principal*r*Math.pow(1+r,periods)/(Math.pow(1+r,periods)-1);
+  } else {
+    mo=principal/periods;
+  }
+  document.getElementById('loan-calc').textContent=`→ 每月 $${fmt(mo)}`;
+  document.getElementById('loan-monthly-disp').value=Math.round(mo);
+}
+function openLoanModal(type,id){
+  editingLoanId=id||null;
+  const item=id?S.loans.find(x=>x.id===id):null;
+  const titles={loan:'新增信貸',borrow:'新增借出（我借給別人）',debt:'新增借入（我欠別人）'};
+  document.getElementById('loan-modal-title').textContent=item?(item.type==='loan'?'編輯信貸':'編輯借貸'):titles[type];
+  document.getElementById('loan-type-hidden').value=item?item.type:type;
+  document.getElementById('loan-name').value=item?item.name:'';
+  document.getElementById('loan-bank').value=item?item.bank:'';
+  document.getElementById('loan-principal').value=item?item.principal:'';
+  document.getElementById('loan-rate').value=item?item.rate:0;
+  document.getElementById('loan-periods').value=item?item.periods:12;
+  document.getElementById('loan-monthly-disp').value=item?item.monthly:'';
+  document.getElementById('loan-paid').value=item?item.paid:0;
+  document.getElementById('loan-date').value=item?item.date:'';
+  document.getElementById('loan-note').value=item?item.note:'';
+  document.getElementById('loan-calc').textContent='';
+  // Show/hide rate row for borrow/debt
+  const showRate=!item||(item.type==='loan');
+  const t=item?item.type:type;
+  document.getElementById('loan-rate-row').style.display=(t==='borrow'||t==='debt')?'none':'flex';
+  document.getElementById('loan-modal').classList.add('show');
+}
+function closeLoanModal(){document.getElementById('loan-modal').classList.remove('show');editingLoanId=null;}
+function saveLoan(){
+  const type=document.getElementById('loan-type-hidden').value;
+  const name=document.getElementById('loan-name').value.trim();
+  if(!name){alert('請填寫名稱');return;}
+  const bank=document.getElementById('loan-bank').value.trim();
+  const principal=parseFloat(document.getElementById('loan-principal').value)||0;
+  if(!principal){alert('請填寫本金');return;}
+  const rate=parseFloat(document.getElementById('loan-rate').value)||0;
+  const periods=parseInt(document.getElementById('loan-periods').value)||12;
+  const monthly=parseFloat(document.getElementById('loan-monthly-disp').value)||(rate>0?
+    (()=>{const r=rate/100/12;return principal*r*Math.pow(1+r,periods)/(Math.pow(1+r,periods)-1);})()
+    :(principal/periods));
+  const paid=parseInt(document.getElementById('loan-paid').value)||0;
+  const date=document.getElementById('loan-date').value.trim();
+  const note=document.getElementById('loan-note').value.trim();
+  const paidAmt=paid*monthly;
+  const remain=Math.max(0,principal-paidAmt);
+  const active=remain>0;
+  const obj={type,name,bank,principal,rate,periods,monthly:Math.round(monthly),paid,paidAmt:Math.round(paidAmt),remain:Math.round(remain),date,note,active};
+  if(editingLoanId){
+    const idx=S.loans.findIndex(x=>x.id===editingLoanId);
+    if(idx>=0)S.loans[idx]={...S.loans[idx],...obj};
+  } else {
+    S.loans.push({id:Date.now(),...obj});
+  }
+  closeLoanModal();save();renderLoans();
+}
+function delLoan(id){if(!confirm('確定刪除？'))return;S.loans=S.loans.filter(x=>x.id!==id);save();renderLoans();}
+function openRepayModal(id){
+  repayTarget=id;
+  const item=S.loans.find(x=>x.id===id);
+  document.getElementById('repay-title').textContent=`還款：${item.name}`;
+  document.getElementById('repay-amt').value='';
+  document.getElementById('repay-modal').classList.add('show');
+}
+function closeRepayModal(){document.getElementById('repay-modal').classList.remove('show');repayTarget=null;}
+function confirmRepay(){
+  const amt=parseFloat(document.getElementById('repay-amt').value)||0;
+  if(!amt){alert('請填寫還款金額');return;}
+  const item=S.loans.find(x=>x.id===repayTarget);
+  if(item){
+    item.paidAmt=Math.max(0,(item.paidAmt||0)+amt);
+    item.remain=Math.max(0,item.principal-item.paidAmt);
+    item.active=item.remain>0;
+    item.paid=item.monthly>0?Math.floor(item.paidAmt/item.monthly):item.paid;
+  }
+  closeRepayModal();save();renderLoans();
+}
+function renderLoans(){
+  const loans=S.loans.filter(x=>x.type==='loan');
+  const borrows=S.loans.filter(x=>x.type==='borrow');
+  const debts=S.loans.filter(x=>x.type==='debt');
+  const totalLoanRemain=loans.filter(x=>x.active).reduce((a,x)=>a+x.remain,0);
+  const totalBorrowRemain=borrows.filter(x=>x.active).reduce((a,x)=>a+x.remain,0);
+  const totalDebtRemain=debts.filter(x=>x.active).reduce((a,x)=>a+x.remain,0);
+  document.getElementById('loan-metrics').innerHTML=`
+    <div class="mc"><div class="ml">信貸未還</div><div class="mv" style="color:var(--r400)">$${fmt(totalLoanRemain)}</div><div class="ms">${loans.filter(x=>x.active).length} 筆進行中</div></div>
+    <div class="mc"><div class="ml">借出未收</div><div class="mv" style="color:var(--a400)">$${fmt(totalBorrowRemain)}</div><div class="ms">${borrows.filter(x=>x.active).length} 筆</div></div>
+    <div class="mc"><div class="ml">借入未還</div><div class="mv" style="color:var(--b400)">$${fmt(totalDebtRemain)}</div><div class="ms">${debts.filter(x=>x.active).length} 筆</div></div>
+  `;
+  function renderLoanItems(arr,color,typeLabel){
+    if(!arr.length)return `<div class="empty">無${typeLabel}紀錄</div>`;
+    return arr.map(x=>{
+      const pct=x.principal>0?Math.min(100,Math.round((x.paidAmt||0)/x.principal*100)):0;
+      const bcol=pct>=100?'bg':pct>50?'bwa':'br';
+      return `<div class="pre-item" style="${!x.active?'opacity:.6':''}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div>
+            <div style="font-size:14px;font-weight:700">${x.name}${x.bank?` <span style="font-size:11px;color:var(--txt3)">· ${x.bank}</span>`:''}${!x.active?'<span class="tag tg-t" style="font-size:10px;margin-left:4px">結清</span>':''}</div>
+            <div style="font-size:11px;color:var(--txt3);margin-top:2px">本金 $${fmt(x.principal)}${x.rate>0?` · ${x.rate}% 年利率`:''}${x.periods?` · ${x.periods}期`:''}${x.date?' · '+x.date:''}${x.note?' · '+x.note:''}</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn-del" onclick="openLoanModal('${x.type}',${x.id})">${icoEdit}</button>
+            <button class="btn-del" onclick="delLoan(${x.id})">${icox}</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+          <div class="bw" style="flex:1;height:7px"><div class="bar ${bcol}" style="width:${pct}%"></div></div>
+          <span style="font-size:12px;font-weight:700;min-width:34px;text-align:right;color:var(--${pct>=100?'t':'txt2'}400)">${pct}%</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+          <span style="color:var(--txt3)">已還 $${fmt(x.paidAmt||0)} · 未還 <strong style="color:${color}">$${fmt(x.remain)}</strong></span>
+          ${x.active?`<button class="btn btn-sm btn-t" onclick="openRepayModal(${x.id})">${icoPlus}還款</button>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('loan-list').innerHTML=`
+    ${loans.length?`<div class="fund-section"><div class="fund-section-title">信貸（向銀行借款）</div>${renderLoanItems(loans,'var(--r400)','信貸')}</div>`:''}
+    ${borrows.length?`<div class="fund-section"><div class="fund-section-title">借出（我借給別人）</div>${renderLoanItems(borrows,'var(--a400)','借出')}</div>`:''}
+    ${debts.length?`<div class="fund-section"><div class="fund-section-title">借入（我欠別人）</div>${renderLoanItems(debts,'var(--b400)','借入')}</div>`:''}
+    ${!S.loans.length?'<div class="empty">尚未設定任何借貸紀錄</div>':''}
+  `;
+}
+
+// ── SETTINGS ──────────────────────────────────────────────
 function renderSettings(){
-  // Banks
   let bhtml='';
   S.banks.forEach((b,i)=>{
     bhtml+=`<div class="setting-row">
@@ -1110,7 +1530,6 @@ function renderSettings(){
     </div>`;
   });
   document.getElementById('bank-rows').innerHTML=bhtml||'<div class="empty" style="padding:10px">尚未設定銀行</div>';
-  // Paytypes
   let phtml='';
   S.paytypes.forEach((p,i)=>{
     phtml+=`<div class="setting-row">
@@ -1124,7 +1543,6 @@ function renderSettings(){
     </div>`;
   });
   document.getElementById('paytype-rows').innerHTML=phtml||'<div class="empty" style="padding:10px">尚未設定付款方式</div>';
-  // Cats
   let chtml='';
   S.cats.forEach((c,i)=>{
     chtml+=`<div class="setting-row">
@@ -1159,8 +1577,8 @@ function saveCats(){
 }
 
 function renderAll(){
-  renderBudget();renderDaily();renderCards();renderInstallments();
-  renderPresaves();renderSavings();renderSettings();
+  renderBudget();renderDaily();renderCards();renderInstallmentsOv();
+  renderPresaves();renderSavings();renderLoans();renderSettings();
   updateCatSelect();updateBankSelects();toggleBankField();
 }
 
